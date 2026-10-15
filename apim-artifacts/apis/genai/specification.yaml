@@ -1,0 +1,46 @@
+openapi: 3.0.1
+info:
+  title: GenAI Chat API
+  description: Facciata OpenAI-compatible. In demo risponde con un mock casuale; in produzione punta a un deployment Microsoft Foundry.
+  version: '1.0'
+servers:
+  - url: https://apim-s4d-dev.azure-api.net/genai
+paths:
+  /chat/completions:
+    post:
+      summary: Chat completion (schema OpenAI)
+      description: Chat completion (schema OpenAI)
+      operationId: chat-completions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - messages
+              type: object
+              properties:
+                model:
+                  type: string
+                messages:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      role:
+                        type: string
+                      content:
+                        type: string
+                max_tokens:
+                  type: integer
+            example:
+              model: string
+              messages:
+                - role: string
+                  content: string
+              max_tokens: 0
+      responses:
+        '200':
+          description: OK
+        '429':
+          description: Token limit superato
+components: { }

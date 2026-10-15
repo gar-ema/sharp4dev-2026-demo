@@ -1,0 +1,86 @@
+name: _publish-env (reusable)
+
+# Workflow riusabile: pubblica gli artefatti su UN ambiente.
+# Passi: checkout (fetch-depth 2 per il git diff) → Node 22 → login OIDC → token → dry-run gate → publish.
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      mode:
+        required: false
+        type: string
+        default: incremental
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    env:
+      TARGET_ENV: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - run: npm ci || npm install
+
+      - name: Resolve secret suffix
+        id: env
+        run: echo "upper=$(echo "${TARGET_ENV}" | tr '[:lower:]' '[:upper:]')" >> "$GITHUB_OUTPUT"
+
+      - name: Azure Login (OIDC, environment ${{ inputs.environment }})
+        uses: azure/login@v3
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Substitute tokens in configuration.${{ inputs.environment }}.yaml
+        uses: cschleiden/replace-tokens@v1.4
+        with:
+          tokenPrefix: '{#['
+          tokenSuffix: ']#}'
+          files: '["configuration.${{ inputs.environment }}.yaml"]'
+        env:
+          ORDERS_BACKEND_KEY: ${{ secrets.ORDERS_BACKEND_KEY }}
+
+      - name: Validate token substitution
+        run: |
+          if grep -q '{#\[' "configuration.${TARGET_ENV}.yaml"; then
+            echo "::error::Token non risolti in configuration.${TARGET_ENV}.yaml"; grep -o '{#\[[^]]*\]#}' "configuration.${TARGET_ENV}.yaml" | sort -u; exit 1
+          fi
+
+      - name: Dry-run gate
+        run: |
+          COMMIT_ARG=""; [ "${{ inputs.mode }}" = "incremental" ] && COMMIT_ARG="--commit-id ${GITHUB_SHA}"
+          npx apiops publish \
+            --subscription-id ${{ secrets.AZURE_SUBSCRIPTION_ID }} \
+            --resource-group ${{ secrets[format('APIM_RESOURCE_GROUP_{0}', steps.env.outputs.upper)] }} \
+            --service-name ${{ secrets[format('APIM_SERVICE_NAME_{0}', steps.env.outputs.upper)] }} \
+            --source ./apim-artifacts \
+            --overrides configuration.${TARGET_ENV}.yaml \
+            $COMMIT_ARG --dry-run
+
+      - name: Publish (${{ inputs.mode }})
+        run: |
+          COMMIT_ARG=""; [ "${{ inputs.mode }}" = "incremental" ] && COMMIT_ARG="--commit-id ${GITHUB_SHA}"
+          npx apiops publish \
+            --subscription-id ${{ secrets.AZURE_SUBSCRIPTION_ID }} \
+            --resource-group ${{ secrets[format('APIM_RESOURCE_GROUP_{0}', steps.env.outputs.upper)] }} \
+            --service-name ${{ secrets[format('APIM_SERVICE_NAME_{0}', steps.env.outputs.upper)] }} \
+            --source ./apim-artifacts \
+            --overrides configuration.${TARGET_ENV}.yaml \
+            $COMMIT_ARG
+
+      - name: Smoke test
+        run: |
+          GW="https://${{ secrets[format('APIM_SERVICE_NAME_{0}', steps.env.outputs.upper)] }}.azure-api.net"
+          echo "GET $GW/orders"
+          curl -s -i "$GW/orders" | grep -iE '^(HTTP|X-Environment)' || true

@@ -1,0 +1,103 @@
+name: PR dry-run (impatto su APIM dev)
+
+# Su ogni pull request che tocca artefatti o override: esegue `apiops publish --dry-run`
+# contro APIM dev e pubblica il report come commento. Il reviewer approva un impatto, non un'intenzione.
+# Gate di esempio: fallisce se il piano contiene DELETE (adatta la soglia alla tua policy).
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'apim-artifacts/**'
+      - 'configuration.*.yaml'
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+env:
+  TARGET_ENV: dev
+
+jobs:
+  dry-run:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - run: npm ci || npm install
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v3
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Substitute tokens in configuration.dev.yaml
+        uses: cschleiden/replace-tokens@v1.4
+        with:
+          tokenPrefix: '{#['
+          tokenSuffix: ']#}'
+          files: '["configuration.dev.yaml"]'
+        env:
+          ORDERS_BACKEND_KEY: ${{ secrets.ORDERS_BACKEND_KEY }}
+
+      - name: Dry-run (testo, per il commento)
+        id: text
+        run: |
+          set -o pipefail
+          npx apiops publish \
+            --subscription-id ${{ secrets.AZURE_SUBSCRIPTION_ID }} \
+            --resource-group ${{ secrets.APIM_RESOURCE_GROUP_DEV }} \
+            --service-name ${{ secrets.APIM_SERVICE_NAME_DEV }} \
+            --source ./apim-artifacts \
+            --overrides configuration.dev.yaml \
+            --dry-run 2>&1 | tee dry-run.txt
+
+      - name: Dry-run (JSON, per il gate)
+        id: json
+        run: |
+          npx apiops publish \
+            --subscription-id ${{ secrets.AZURE_SUBSCRIPTION_ID }} \
+            --resource-group ${{ secrets.APIM_RESOURCE_GROUP_DEV }} \
+            --service-name ${{ secrets.APIM_SERVICE_NAME_DEV }} \
+            --source ./apim-artifacts \
+            --overrides configuration.dev.yaml \
+            --dry-run --format json 2>/dev/null > dry-run.json
+          echo "deletes=$(jq '.dryRun.summary.deletes' dry-run.json)" >> "$GITHUB_OUTPUT"
+          echo "creates=$(jq '.dryRun.summary.creates' dry-run.json)" >> "$GITHUB_OUTPUT"
+          echo "skips=$(jq '.dryRun.summary.skips' dry-run.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        env:
+          REPORT_PATH: dry-run.txt
+          DELETES: ${{ steps.json.outputs.deletes }}
+          CREATES: ${{ steps.json.outputs.creates }}
+          SKIPS: ${{ steps.json.outputs.skips }}
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync(process.env.REPORT_PATH, 'utf8').slice(-60000);
+            const badge = Number(process.env.DELETES) > 0 ? '🛑' : '✅';
+            const body = `### ${badge} APIOps dry-run su **dev**\n` +
+              `**${process.env.CREATES}** PUT · **${process.env.DELETES}** DELETE · **${process.env.SKIPS}** SKIP\n\n` +
+              '<details><summary>Report completo</summary>\n\n```\n' + report + '\n```\n</details>';
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number, owner: context.repo.owner, repo: context.repo.repo, body });
+
+      - name: "Gate: nessuna cancellazione senza review esplicita"
+        run: |
+          if [ "${{ steps.json.outputs.deletes }}" != "0" ]; then
+            echo "::error::Il piano contiene ${{ steps.json.outputs.deletes }} DELETE: richiede una PR dedicata con label 'allow-delete'."
+            exit 1
+          fi
+          if [ "${{ steps.json.outputs.skips }}" != "0" ]; then
+            echo "::warning::${{ steps.json.outputs.skips }} risorse SKIP: la CLI non è riuscita a leggerle (permessi/connettività)."
+          fi

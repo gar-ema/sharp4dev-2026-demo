@@ -1,0 +1,1 @@
+{ "properties": { "displayName": "Catalog API", "description": "Catalogo fittizio: prezzi e stock casuali, cache 20s, chaos mode", "path": "catalog", "protocols": ["https"], "apiType": "http", "format": "openapi", "subscriptionRequired": false, "serviceUrl": "https://catalog-dev.contoso.example" } }

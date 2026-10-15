@@ -1,0 +1,28 @@
+<policies>
+    <inbound>
+        <base />
+        <include-fragment fragment-id="std-headers" />
+        <!-- AI gateway: limite di token per chiamante (qui per IP; in produzione per subscription o app).
+             estimate-prompt-tokens="true" stima i token del prompt PRIMA di chiamare il modello. -->
+        <llm-token-limit counter-key="@(context.Request.IpAddress)" tokens-per-minute="300" estimate-prompt-tokens="true"
+                         remaining-tokens-header-name="x-ratelimit-remaining-tokens" tokens-consumed-header-name="x-tokens-consumed" />
+        <!-- In demo genai-backend punta all'API genai-mock sullo stesso gateway; in produzione, via override, a Foundry. -->
+        <set-backend-service backend-id="genai-backend" />
+        <!-- Produzione: in aggiunta, managed identity verso Foundry, metriche e content safety.
+        <authentication-managed-identity resource="https://cognitiveservices.azure.com" output-token-variable-name="aad-token" ignore-error="false" />
+        <set-header name="Authorization" exists-action="override"><value>@("Bearer " + (string)context.Variables["aad-token"])</value></set-header>
+        <llm-emit-token-metric namespace="sharp4dev-genai"><dimension name="API ID" /><dimension name="Subscription ID" /></llm-emit-token-metric>
+        <llm-content-safety backend-id="content-safety-backend" shield-prompt="true"><categories output-type="FourSeverityLevels"><category name="Hate" threshold="4" /><category name="Violence" threshold="4" /></categories></llm-content-safety>
+        -->
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+        <include-fragment fragment-id="std-headers" />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>

@@ -1,0 +1,1 @@
+{ "properties": { "displayName": "GenAI mock model", "description": "Finto modello OpenAI-compatible: backend di genai in demo", "path": "genai-mock", "protocols": ["https"], "apiType": "http", "format": "openapi", "subscriptionRequired": false } }

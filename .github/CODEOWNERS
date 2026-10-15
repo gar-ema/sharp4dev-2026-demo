@@ -1,0 +1,9 @@
+# Il team platform approva le risorse condivise; il team orders le proprie API.
+# Sostituisci con utenti/team reali del tuo repository.
+apim-artifacts/namedValues/      @gar-ema
+apim-artifacts/products/         @gar-ema
+apim-artifacts/policyFragments/  @gar-ema
+apim-artifacts/policy.xml        @gar-ema
+apim-artifacts/apis/orders/      @gar-ema
+configuration.*.yaml             @gar-ema
+.github/                         @gar-ema

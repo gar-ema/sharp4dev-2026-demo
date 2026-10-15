@@ -1,0 +1,13 @@
+openapi: "3.0.1"
+info:
+  title: GenAI mock model
+  version: "1.0"
+  description: Finto modello OpenAI-compatible usato come backend dell'API genai in demo. In produzione il backend è un deployment Microsoft Foundry.
+paths:
+  /chat/completions:
+    post:
+      operationId: chat-completions
+      summary: Chat completion finta (schema OpenAI, con usage)
+      responses:
+        "200":
+          description: OK

@@ -1,0 +1,40 @@
+openapi: 3.0.1
+info:
+  title: Catalog API
+  description: 'Catalogo prodotti fittizio con risposte casuali. Mostra fragment, cache, check-header, choose e CORS.'
+  version: '1.0'
+servers:
+  - url: https://apim-s4d-dev.azure-api.net/catalog
+paths:
+  /products:
+    get:
+      summary: 'Elenco prodotti (prezzi e stock casuali, risposta in cache per 20s)'
+      description: 'Elenco prodotti (prezzi e stock casuali, risposta in cache per 20s)'
+      operationId: list-products
+      parameters:
+        - name: chaos
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: OK
+        '503':
+          description: Chaos mode
+  '/products/{id}/price':
+    get:
+      summary: Prezzo di un prodotto (richiede header X-Client-Id)
+      description: Prezzo di un prodotto (richiede header X-Client-Id)
+      operationId: get-price
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Header X-Client-Id mancante
+components: { }

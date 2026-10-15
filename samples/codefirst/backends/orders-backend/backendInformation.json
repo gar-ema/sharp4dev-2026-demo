@@ -1,0 +1,8 @@
+{
+  "properties": {
+    "title": "Orders backend",
+    "description": "Backend fittizio: la demo usa mock-response, l'URL serve a mostrare gli override",
+    "url": "https://orders-dev.contoso.example",
+    "protocol": "http"
+  }
+}

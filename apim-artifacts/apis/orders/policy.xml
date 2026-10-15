@@ -1,0 +1,21 @@
+<policies>
+	<inbound>
+		<base />
+		<set-backend-service backend-id="orders-backend" />
+		<set-header name="X-Environment" exists-action="override">
+			<value>{{env-name}}</value>
+		</set-header>
+	</inbound>
+	<backend>
+		<base />
+	</backend>
+	<outbound>
+		<base />
+		<set-header name="X-Environment" exists-action="override">
+			<value>{{env-name}}</value>
+		</set-header>
+	</outbound>
+	<on-error>
+		<base />
+	</on-error>
+</policies>

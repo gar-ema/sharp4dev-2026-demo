@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/apiops-cli/main/schemas/v1/override-config.schema.json
+# Override per l'ambiente dev: stessi artefatti, valori diversi.
+# I token {#[NOME]#} vengono sostituiti dalla pipeline con i secret dell'environment GitHub "dev".
+
+namedValues:
+  - name: env-name
+    properties:
+      value: "dev"
+  - name: orders-backend-key
+    properties:
+      secret: true
+      value: "{#[ORDERS_BACKEND_KEY]#}"
+      # In produzione reale: riferimento Key Vault al posto del token, es.
+      # keyVault:
+      #   secretIdentifier: "https://kv-orders-dev.vault.azure.net/secrets/orders-backend-key"
+
+backends:
+  - name: orders-backend
+    properties:
+      url: "https://orders-dev.contoso.example"
+  - name: catalog-backend
+    properties:
+      url: "https://catalog-dev.contoso.example"
+  - name: genai-backend
+    properties:
+      url: "https://apim-s4d-dev.azure-api.net/genai-mock"   # in produzione reale: https://<foundry-resource>.openai.azure.com/openai
+
+apis:
+  - name: orders
+    properties:
+      serviceUrl: "https://orders-dev.contoso.example"

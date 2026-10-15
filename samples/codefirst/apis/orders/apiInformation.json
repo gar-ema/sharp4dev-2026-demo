@@ -1,0 +1,12 @@
+{
+  "properties": {
+    "displayName": "Orders API",
+    "description": "API demo per APIOps: GET /orders e GET /orders/{id}",
+    "path": "orders",
+    "protocols": ["https"],
+    "apiType": "http",
+    "format": "openapi",
+    "subscriptionRequired": false,
+    "serviceUrl": "https://orders-dev.contoso.example"
+  }
+}

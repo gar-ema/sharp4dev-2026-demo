@@ -1,0 +1,15 @@
+node_modules/
+.env
+*.local.yaml
+infra/*.json
+
+# macOS / OneDrive
+.DS_Store
+._*
+~$*
+*.tmp
+
+# Log e output locali dei dry-run
+*.log
+dry-run.txt
+dry-run.json

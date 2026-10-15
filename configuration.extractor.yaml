@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/apiops-cli/main/schemas/v1/extractor-config.schema.json
+# Filtro di estrazione della demo: le tre API demo e il prodotto sharp4dev.
+# Backend, named value e il fragment "std-headers" arrivano comunque come dipendenze
+# transitive (sono referenziati nelle policy). Tutto il resto escluso.
+apis:
+  - orders
+  - catalog
+  - genai
+  - genai-mock
+products:
+  - sharp4dev
+backends: []
+namedValues: []
+tags: []
+versionSets: []
+loggers: []
+diagnostics: []
+groups: []
+policyFragments: []
+gateways: []
+schemas: []
+subscriptions: []
+policies: []
+policyRestrictions: []
+documentations: []
+workspaces: []

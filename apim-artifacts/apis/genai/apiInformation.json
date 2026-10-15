@@ -1,0 +1,35 @@
+{
+  "id": "/subscriptions/d7096863-2be3-4152-9170-aed58a1c60fa/resourceGroups/rg-apiops-s4d-dev/providers/Microsoft.ApiManagement/service/apim-s4d-dev/apis/genai",
+  "type": "Microsoft.ApiManagement/service/apis",
+  "name": "genai",
+  "properties": {
+    "displayName": "GenAI Chat API",
+    "apiRevision": "1",
+    "description": "Facciata OpenAI-compatible. In demo risponde con un mock casuale; in produzione punta a un deployment Microsoft Foundry.",
+    "subscriptionRequired": false,
+    "serviceUrl": "https://genai-dev.contoso.example/openai",
+    "backendId": null,
+    "path": "genai",
+    "protocols": [
+      "https"
+    ],
+    "mcpProperties": null,
+    "a2aProperties": null,
+    "isAgent": false,
+    "agent": null,
+    "jsonRpcProperties": null,
+    "authenticationSettings": {
+      "oAuth2": null,
+      "openid": null,
+      "oAuth2AuthenticationSettings": [],
+      "openidAuthenticationSettings": []
+    },
+    "subscriptionKeyParameterNames": {
+      "header": "Ocp-Apim-Subscription-Key",
+      "query": "subscription-key",
+      "bearer": null
+    },
+    "isCurrent": true,
+    "effectivePath": null
+  }
+}

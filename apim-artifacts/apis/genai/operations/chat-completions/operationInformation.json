@@ -1,0 +1,55 @@
+{
+  "id": "/subscriptions/d7096863-2be3-4152-9170-aed58a1c60fa/resourceGroups/rg-apiops-s4d-dev/providers/Microsoft.ApiManagement/service/apim-s4d-dev/apis/genai/operations/chat-completions",
+  "type": "Microsoft.ApiManagement/service/apis/operations",
+  "name": "chat-completions",
+  "properties": {
+    "displayName": "Chat completion (schema OpenAI)",
+    "method": "POST",
+    "urlTemplate": "/chat/completions",
+    "templateParameters": [],
+    "description": "Chat completion (schema OpenAI)",
+    "request": {
+      "queryParameters": [],
+      "headers": [],
+      "representations": [
+        {
+          "contentType": "application/json",
+          "examples": {
+            "default": {
+              "value": {
+                "model": "string",
+                "messages": [
+                  {
+                    "role": "string",
+                    "content": "string"
+                  }
+                ],
+                "max_tokens": 0
+              }
+            }
+          },
+          "schemaId": "6ad15a7d10a45d2298475565",
+          "typeName": "ChatCompletionsPostRequest",
+          "generatedSample": "{\r\n  \"model\": \"string\",\r\n  \"messages\": [\r\n    {\r\n      \"role\": \"string\",\r\n      \"content\": \"string\"\r\n    }\r\n  ],\r\n  \"max_tokens\": 0\r\n}",
+          "sample": "{\r\n  \"model\": \"string\",\r\n  \"messages\": [\r\n    {\r\n      \"role\": \"string\",\r\n      \"content\": \"string\"\r\n    }\r\n  ],\r\n  \"max_tokens\": 0\r\n}"
+        }
+      ]
+    },
+    "responses": [
+      {
+        "statusCode": 200,
+        "description": "OK",
+        "representations": [],
+        "headers": []
+      },
+      {
+        "statusCode": 429,
+        "description": "Token limit superato",
+        "representations": [],
+        "headers": []
+      }
+    ],
+    "policies": null,
+    "effectivePath": null
+  }
+}

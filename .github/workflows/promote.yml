@@ -1,0 +1,49 @@
+name: Promote dev → qa → prod
+
+# Pipeline di promozione: lo STESSO commit approvato viene pubblicato in sequenza su dev, qa e prod.
+# Ogni job usa l'environment GitHub omonimo (secret propri + protection rules: qa/prod con required reviewers).
+# Ogni job esegue prima un dry-run (gate) e poi il publish incrementale (--commit-id).
+# Il workflow generato da `apiops init` (run-apiops-publisher.yml) resta come riferimento/manuale:
+# pubblica un solo ambiente per run. Questo lo estende con la catena e le approvazioni.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apim-artifacts/**'
+      - 'configuration.*.yaml'
+  workflow_dispatch:
+    inputs:
+      MODE:
+        description: 'incremental = solo risorse del commit; full = tutti gli artefatti (recovery/primo deploy)'
+        type: choice
+        default: incremental
+        options: [incremental, full]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish-dev:
+    uses: ./.github/workflows/_publish-env.yml
+    with:
+      environment: dev
+      mode: ${{ github.event.inputs.MODE || 'incremental' }}
+    secrets: inherit
+
+  publish-qa:
+    needs: publish-dev
+    uses: ./.github/workflows/_publish-env.yml
+    with:
+      environment: qa
+      mode: ${{ github.event.inputs.MODE || 'incremental' }}
+    secrets: inherit
+
+  publish-prod:
+    needs: publish-qa
+    uses: ./.github/workflows/_publish-env.yml
+    with:
+      environment: prod
+      mode: ${{ github.event.inputs.MODE || 'incremental' }}
+    secrets: inherit

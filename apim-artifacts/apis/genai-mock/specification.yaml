@@ -1,0 +1,29 @@
+openapi: 3.0.1
+info:
+  title: GenAI mock model
+  description: Finto modello OpenAI-compatible usato come backend dell'API genai in demo. In produzione il backend è un deployment Microsoft Foundry.
+  version: '1.0'
+servers:
+  - url: https://apim-s4d-dev.azure-api.net/genai-mock
+paths:
+  /chat/completions:
+    post:
+      summary: 'Chat completion finta (schema OpenAI, con usage)'
+      description: 'Chat completion finta (schema OpenAI, con usage)'
+      operationId: chat-completions
+      responses:
+        '200':
+          description: OK
+components:
+  securitySchemes:
+    apiKeyHeader:
+      type: apiKey
+      name: Ocp-Apim-Subscription-Key
+      in: header
+    apiKeyQuery:
+      type: apiKey
+      name: subscription-key
+      in: query
+security:
+  - apiKeyHeader: [ ]
+  - apiKeyQuery: [ ]

@@ -1,0 +1,55 @@
+{
+  "id": "/subscriptions/d7096863-2be3-4152-9170-aed58a1c60fa/resourceGroups/rg-apiops-s4d-dev/providers/Microsoft.ApiManagement/service/apim-s4d-dev/apis/orders/operations/get-order",
+  "type": "Microsoft.ApiManagement/service/apis/operations",
+  "name": "get-order",
+  "properties": {
+    "displayName": "Dettaglio ordine",
+    "method": "GET",
+    "urlTemplate": "/{id}",
+    "templateParameters": [
+      {
+        "name": "id",
+        "type": "string",
+        "required": true,
+        "values": [],
+        "schemaId": "6ad15a7dc3c8a81720f8bec7",
+        "typeName": "id-GetRequest"
+      }
+    ],
+    "description": "Dettaglio ordine",
+    "responses": [
+      {
+        "statusCode": 200,
+        "description": "OK",
+        "representations": [
+          {
+            "contentType": "application/json",
+            "examples": {
+              "default": {
+                "value": {
+                  "id": "string",
+                  "customer": "string",
+                  "total": 0,
+                  "status": "string"
+                }
+              }
+            },
+            "schemaId": "6ad15a7dc3c8a81720f8bec7",
+            "typeName": "Order",
+            "generatedSample": "{\r\n  \"id\": \"string\",\r\n  \"customer\": \"string\",\r\n  \"total\": 0.0,\r\n  \"status\": \"string\"\r\n}",
+            "sample": "{\r\n  \"id\": \"string\",\r\n  \"customer\": \"string\",\r\n  \"total\": 0.0,\r\n  \"status\": \"string\"\r\n}"
+          }
+        ],
+        "headers": []
+      },
+      {
+        "statusCode": 404,
+        "description": "Non trovato",
+        "representations": [],
+        "headers": []
+      }
+    ],
+    "policies": null,
+    "effectivePath": null
+  }
+}

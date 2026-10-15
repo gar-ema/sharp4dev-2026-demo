@@ -1,0 +1,7 @@
+{
+  "properties": {
+    "description": "Header standard: X-Request-Id, X-Environment, X-Gateway",
+    "format": "rawxml",
+    "value": "<fragment>\n    <set-header name=\"X-Request-Id\" exists-action=\"override\">\n        <value>@(context.RequestId.ToString())</value>\n    </set-header>\n    <set-header name=\"X-Environment\" exists-action=\"override\">\n        <value>{{env-name}}</value>\n    </set-header>\n    <set-header name=\"X-Gateway\" exists-action=\"override\">\n        <value>@(context.Deployment.ServiceName)</value>\n    </set-header>\n</fragment>\n"
+  }
+}

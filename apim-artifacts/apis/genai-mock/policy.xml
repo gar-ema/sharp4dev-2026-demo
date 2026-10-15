@@ -1,0 +1,38 @@
+<policies>
+	<inbound>
+		<base />
+		<!-- Finto modello OpenAI-compatible: è il backend di "genai" sullo stesso gateway,
+             così llm-token-limit vede una vera risposta con "usage" e conta i token. -->
+		<return-response>
+			<set-status code="200" reason="OK" />
+			<set-header name="Content-Type" exists-action="override">
+				<value>application/json</value>
+			</set-header>
+			<set-header name="X-Environment" exists-action="override">
+				<value>{{env-name}}</value>
+			</set-header>
+			<set-body>@{
+                var r = new Random();
+                var answers = new[] {
+                    "APIOps significa trattare la configurazione di API Management come codice: repository, pull request, pipeline.",
+                    "Il dry-run mostra cosa cambierebbe in APIM prima di pubblicare: PUT, DELETE, SKIP.",
+                    "Gli override per ambiente sostituiscono URL e segreti al publish: stessi artefatti, valori diversi.",
+                    "Un AI gateway limita i token, misura i consumi, mette in cache le risposte simili e filtra i contenuti.",
+                    "La CLI apiops ha quattro comandi: init, extract, publish e apic."
+                };
+                var content = answers[r.Next(answers.Length)];
+                var prompt = r.Next(20, 60); var completion = content.Length / 4;
+                return "{\"id\":\"chatcmpl-" + context.RequestId.ToString("N").Substring(0, 12) + "\",\"object\":\"chat.completion\",\"created\":" + DateTimeOffset.UtcNow.ToUnixTimeSeconds() + ",\"model\":\"mock-s4d-1\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"" + content + "\"},\"finish_reason\":\"stop\"}],\"usage\":{\"prompt_tokens\":" + prompt + ",\"completion_tokens\":" + completion + ",\"total_tokens\":" + (prompt + completion) + "}}";
+            }</set-body>
+		</return-response>
+	</inbound>
+	<backend>
+		<base />
+	</backend>
+	<outbound>
+		<base />
+	</outbound>
+	<on-error>
+		<base />
+	</on-error>
+</policies>

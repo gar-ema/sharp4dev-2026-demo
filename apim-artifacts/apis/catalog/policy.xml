@@ -1,0 +1,26 @@
+<policies>
+	<inbound>
+		<base />
+		<cors allow-credentials="false">
+			<allowed-origins>
+				<origin>*</origin>
+			</allowed-origins>
+			<allowed-methods>
+				<method>GET</method>
+			</allowed-methods>
+		</cors>
+		<include-fragment fragment-id="std-headers" />
+		<set-backend-service backend-id="catalog-backend" />
+	</inbound>
+	<backend>
+		<base />
+	</backend>
+	<outbound>
+		<base />
+		<include-fragment fragment-id="std-headers" />
+	</outbound>
+	<on-error>
+		<base />
+		<include-fragment fragment-id="std-headers" />
+	</on-error>
+</policies>

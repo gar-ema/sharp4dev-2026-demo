@@ -1,0 +1,65 @@
+<policies>
+    <inbound>
+        <base />
+        <set-variable name="chaos" value="@(context.Request.Url.Query.GetValueOrDefault(&quot;chaos&quot;, &quot;false&quot;) == &quot;true&quot;)" />
+        <choose>
+            <when condition="@(context.Variables.GetValueOrDefault&lt;bool&gt;(&quot;chaos&quot;) &amp;&amp; new Random().Next(0, 100) &lt; 50)">
+                <return-response>
+                    <set-status code="503" reason="Service Unavailable" />
+                    <set-header name="Retry-After" exists-action="override">
+                        <value>2</value>
+                    </set-header>
+                    <set-body>{"error":"chaos mode: random failure"}</set-body>
+                </return-response>
+            </when>
+        </choose>
+        <!-- Cache interna (Basic v2): la risposta mock viene generata in inbound con return-response,
+             quindi outbound non gira e cache-store non sarebbe mai raggiunto. Si usa la cache a valore:
+             lookup -> se assente genera e store (20 s) -> return-response. -->
+        <cache-lookup-value key="catalog-products-body" variable-name="body" />
+        <cache-lookup-value key="catalog-products-at" variable-name="generatedAt" />
+        <set-variable name="cacheHit" value="@(context.Variables.ContainsKey(&quot;body&quot;))" />
+        <choose>
+            <when condition="@(!context.Variables.ContainsKey(&quot;body&quot;))">
+                <set-variable name="generatedAt" value="@(DateTime.UtcNow.ToString(&quot;o&quot;))" />
+                <set-variable name="body" value="@{
+                    var r = new Random();
+                    var names = new[] { &quot;Tastiera meccanica&quot;, &quot;Monitor 27 pollici&quot;, &quot;Webcam 4K&quot;, &quot;Docking station&quot;, &quot;Cuffie ANC&quot; };
+                    var items = new System.Text.StringBuilder(&quot;[&quot;);
+                    for (var i = 0; i &lt; names.Length; i++) {
+                        if (i &gt; 0) { items.Append(&quot;,&quot;); }
+                        items.Append(&quot;{\&quot;id\&quot;:\&quot;P&quot; + (100 + i) + &quot;\&quot;,\&quot;name\&quot;:\&quot;&quot; + names[i] + &quot;\&quot;,\&quot;price\&quot;:&quot; + r.Next(20, 500) + &quot;.&quot; + r.Next(0, 99).ToString(&quot;00&quot;) + &quot;,\&quot;stock\&quot;:&quot; + r.Next(0, 40) + &quot;}&quot;);
+                    }
+                    return items.Append(&quot;]&quot;).ToString();
+                }" />
+                <cache-store-value key="catalog-products-body" value="@((string)context.Variables[&quot;body&quot;])" duration="20" />
+                <cache-store-value key="catalog-products-at" value="@((string)context.Variables[&quot;generatedAt&quot;])" duration="20" />
+            </when>
+        </choose>
+        <return-response>
+            <set-status code="200" reason="OK" />
+            <set-header name="Content-Type" exists-action="override">
+                <value>application/json</value>
+            </set-header>
+            <set-header name="X-Generated-At" exists-action="override">
+                <value>@((string)context.Variables["generatedAt"])</value>
+            </set-header>
+            <set-header name="X-Cache" exists-action="override">
+                <value>@(context.Variables.GetValueOrDefault&lt;bool&gt;("cacheHit") ? "HIT" : "MISS")</value>
+            </set-header>
+            <set-header name="X-Environment" exists-action="override">
+                <value>{{env-name}}</value>
+            </set-header>
+            <set-body>@((string)context.Variables["body"])</set-body>
+        </return-response>
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>

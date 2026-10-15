@@ -1,0 +1,9 @@
+{
+  "name": "apiops-sharp4dev-2026",
+  "version": "1.0.0",
+  "private": true,
+  "description": "APIOps in azione - demo Sharp4Dev 2026: Azure API Management configuration-as-code con APIOps CLI",
+  "dependencies": {
+    "@azure-tools/apiops-cli": "1.0.5"
+  }
+}
