@@ -13,9 +13,7 @@
         {
           "name": "chaos",
           "type": "boolean",
-          "values": [],
-          "schemaId": "6ad15a7d3dccad232c3fd8c3",
-          "typeName": "ProductsGetRequest"
+          "values": []
         }
       ],
       "headers": [],

@@ -27,10 +27,10 @@
                 ]
               }
             },
-            "schemaId": "6ad15a7dc3c8a81720f8bec7",
+            "schemaId": "6ad167f93dccad232c3fdf12",
             "typeName": "Get200ApplicationJsonResponse",
-            "generatedSample": "[\r\n  {\r\n    \"id\": \"string\",\r\n    \"customer\": \"string\",\r\n    \"total\": 0.0,\r\n    \"status\": \"string\"\r\n  }\r\n]",
-            "sample": "[\r\n  {\r\n    \"id\": \"string\",\r\n    \"customer\": \"string\",\r\n    \"total\": 0.0,\r\n    \"status\": \"string\"\r\n  }\r\n]"
+            "generatedSample": "[\r\n  {\r\n    \"id\": \"string\",\r\n    \"customer\": \"string\",\r\n    \"total\": 0,\r\n    \"status\": \"string\"\r\n  }\r\n]",
+            "sample": "[\r\n  {\r\n    \"id\": \"string\",\r\n    \"customer\": \"string\",\r\n    \"total\": 0,\r\n    \"status\": \"string\"\r\n  }\r\n]"
           }
         ],
         "headers": []

@@ -1,0 +1,15 @@
+{
+  "id": "/subscriptions/d7096863-2be3-4152-9170-aed58a1c60fa/resourceGroups/rg-apiops-s4d-dev/providers/Microsoft.ApiManagement/service/apim-s4d-dev/loggers/azuremonitor",
+  "type": "Microsoft.ApiManagement/service/loggers",
+  "name": "azuremonitor",
+  "properties": {
+    "loggerType": "azureMonitor",
+    "description": null,
+    "isBuffered": true,
+    "resourceId": null,
+    "maxMessageSizeInBytes": null,
+    "metricsEndpoint": null,
+    "logsEndpoint": null,
+    "tracesEndpoint": null
+  }
+}

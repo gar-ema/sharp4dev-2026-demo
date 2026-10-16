@@ -6,7 +6,6 @@
     "displayName": "env-name",
     "value": "dev",
     "tags": null,
-    "secret": false,
-    "provisioningState": "Succeeded"
+    "secret": false
   }
 }

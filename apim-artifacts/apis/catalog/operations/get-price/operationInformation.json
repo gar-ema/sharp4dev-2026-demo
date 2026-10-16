@@ -12,7 +12,7 @@
         "type": "string",
         "required": true,
         "values": [],
-        "schemaId": "6ad15a7d3dccad232c3fd8c3",
+        "schemaId": "6ad22202c3c8a81720f91668",
         "typeName": "Products-id-PriceGetRequest"
       }
     ],

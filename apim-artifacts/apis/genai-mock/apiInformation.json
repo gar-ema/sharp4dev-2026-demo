@@ -7,7 +7,7 @@
     "apiRevision": "1",
     "description": "Finto modello OpenAI-compatible usato come backend dell'API genai in demo. In produzione il backend è un deployment Microsoft Foundry.",
     "subscriptionRequired": false,
-    "serviceUrl": null,
+    "serviceUrl": "https://apim-s4d-dev.azure-api.net/genai-mock",
     "backendId": null,
     "path": "genai-mock",
     "protocols": [
