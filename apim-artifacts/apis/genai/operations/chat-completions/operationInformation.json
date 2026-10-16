@@ -28,7 +28,7 @@
               }
             }
           },
-          "schemaId": "6ad15a7d10a45d2298475565",
+          "schemaId": "6ad167f9c3c8a81720f8c4f3",
           "typeName": "ChatCompletionsPostRequest",
           "generatedSample": "{\r\n  \"model\": \"string\",\r\n  \"messages\": [\r\n    {\r\n      \"role\": \"string\",\r\n      \"content\": \"string\"\r\n    }\r\n  ],\r\n  \"max_tokens\": 0\r\n}",
           "sample": "{\r\n  \"model\": \"string\",\r\n  \"messages\": [\r\n    {\r\n      \"role\": \"string\",\r\n      \"content\": \"string\"\r\n    }\r\n  ],\r\n  \"max_tokens\": 0\r\n}"

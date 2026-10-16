@@ -1,0 +1,26 @@
+{
+  "id": "/subscriptions/d7096863-2be3-4152-9170-aed58a1c60fa/resourceGroups/rg-apiops-s4d-dev/providers/Microsoft.ApiManagement/service/apim-s4d-dev/apis/catalog/schemas/6ad22202c3c8a81720f91668",
+  "type": "Microsoft.ApiManagement/service/apis/schemas",
+  "name": "6ad22202c3c8a81720f91668",
+  "properties": {
+    "contentType": "application/vnd.oai.openapi.components+json",
+    "document": {
+      "components": {
+        "schemas": {
+          "ProductsGetRequest": {
+            "type": "boolean",
+            "x-apim-inline": true
+          },
+          "ProductsDiscountedGetRequest": {
+            "type": "integer",
+            "x-apim-inline": true
+          },
+          "Products-id-PriceGetRequest": {
+            "type": "string",
+            "x-apim-inline": true
+          }
+        }
+      }
+    }
+  }
+}

@@ -10,7 +10,7 @@
 				<value>{{env-name}}</value>
 			</set-header>
 			<set-body>@{
-                var min = 10;
+                var min = 20;
                 int.TryParse(context.Request.Url.Query.GetValueOrDefault("minDiscount", "10"), out min);
                 if (min &lt; 5) { min = 5; }
                 if (min &gt; 70) { min = 70; }

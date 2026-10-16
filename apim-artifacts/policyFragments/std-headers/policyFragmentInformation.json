@@ -4,7 +4,6 @@
   "name": "std-headers",
   "properties": {
     "description": "Header standard: X-Request-Id, X-Environment, X-Gateway",
-    "value": "<fragment>\r\n\t<set-header name=\"X-Request-Id\" exists-action=\"override\">\r\n\t\t<value>@(context.RequestId.ToString())</value>\r\n\t</set-header>\r\n\t<set-header name=\"X-Environment\" exists-action=\"override\">\r\n\t\t<value>{{env-name}}</value>\r\n\t</set-header>\r\n\t<set-header name=\"X-Gateway\" exists-action=\"override\">\r\n\t\t<value>@(context.Deployment.ServiceName)</value>\r\n\t</set-header>\r\n</fragment>",
-    "provisioningState": "Succeeded"
+    "value": "<fragment>\r\n\t<set-header name=\"X-Request-Id\" exists-action=\"override\">\r\n\t\t<value>@(context.RequestId.ToString())</value>\r\n\t</set-header>\r\n\t<set-header name=\"X-Environment\" exists-action=\"override\">\r\n\t\t<value>{{env-name}}</value>\r\n\t</set-header>\r\n\t<set-header name=\"X-Gateway\" exists-action=\"override\">\r\n\t\t<value>@(context.Deployment.ServiceName)</value>\r\n\t</set-header>\r\n</fragment>"
   }
 }
