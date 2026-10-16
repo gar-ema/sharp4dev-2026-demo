@@ -15,16 +15,27 @@ if [ -z "$APP_ID" ]; then
 fi
 echo "   clientId = $APP_ID"
 
-fed() { # name subject
-  az ad app federated-credential list --id "$APP_ID" --query "[?name=='$1'] | length(@)" -o tsv | grep -q '^1$' && return
+fed() { # name subject — crea, o ricrea se il subject è cambiato
+  local CUR
+  CUR=$(az ad app federated-credential list --id "$APP_ID" --query "[?name=='$1'].subject | [0]" -o tsv)
+  [ "$CUR" = "$2" ] && return
+  if [ -n "$CUR" ]; then
+    az ad app federated-credential delete --id "$APP_ID" --federated-credential-id "$1"
+  fi
   az ad app federated-credential create --id "$APP_ID" --parameters "{
     \"name\": \"$1\", \"issuer\": \"https://token.actions.githubusercontent.com\",
     \"subject\": \"$2\", \"audiences\": [\"api://AzureADTokenExchange\"] }" -o none
 }
 echo "== Federated credentials"
-fed github-main-branch "repo:${REPO}:ref:refs/heads/main"
-fed github-pull-request "repo:${REPO}:pull_request"
-for ENV in dev qa prod; do fed "github-env-${ENV}" "repo:${REPO}:environment:${ENV}"; done
+# GitHub può emettere il subject classico (owner/repo) o quello con gli ID (owner@id/repo@id): li registriamo entrambi
+OWNER="${REPO%%/*}"; NAME="${REPO##*/}"
+OWNER_ID=$(gh api "users/${OWNER}" -q .id); REPO_ID=$(gh api "repos/${REPO}" -q .id)
+for P in "classic:repo:${REPO}" "ids:repo:${OWNER}@${OWNER_ID}/${NAME}@${REPO_ID}"; do
+  K="${P%%:*}"; S="${P#*:}"; SFX=""; [ "$K" = ids ] && SFX="-ids"
+  fed "github-main-branch${SFX}" "${S}:ref:refs/heads/main"
+  fed "github-pull-request${SFX}" "${S}:pull_request"
+  for ENV in dev qa prod; do fed "github-env-${ENV}${SFX}" "${S}:environment:${ENV}"; done
+done
 
 echo "== RBAC: API Management Service Contributor sulle istanze, Reader sui resource group"
 for ENV in dev qa prod; do

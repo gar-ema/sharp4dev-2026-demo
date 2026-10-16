@@ -33,10 +33,10 @@ Poi, nella UI di GitHub, una volta sola:
 2. **Settings → Rules → Rulesets → New branch ruleset** (nei repo nuovi le branch protection classiche sotto "Branches" non ci sono più): enforcement *Active*, target *default branch*; regole: *Restrict deletions*, *Block force pushes*, *Require a pull request before merging* con **0 approvazioni** (sei l'unico collaboratore: GitHub non ti lascia approvare la tua PR, e "Require review from Code Owners" ti bloccherebbe al merge), *Require status checks to pass* → **`dry-run`** (è il nome del *job* in `pr-dry-run.yml`, non del workflow; compare nell'elenco dopo la prima run, prima si aggiunge digitandolo). In alternativa da terminale, ripetibile: il comando `gh api … /rulesets` in `.github/copilot-instructions.md` §9.
 3. **Settings → Actions → General**: "Allow GitHub Actions to create and approve pull requests" (serve all'extractor per aprire PR).
 
-Verifica: `./demo/smoke.sh dev` → orders, catalog (cache hit alla seconda chiamata, 401/200 sul prezzo) e genai rispondono con `X-Environment: dev`; qa e prod ancora vuoti.
+Verifica: `./demo/smoke.sh dev` → orders, catalog (`X-Cache: HIT` alla seconda chiamata, 401/200 sul prezzo) e genai (che inoltra al finto modello `genai-mock` sullo stesso gateway) rispondono con `X-Environment: dev`; qa e prod ancora vuoti.
 `./demo/chaos-test.sh` (503 casuali) e `./demo/genai-tokenlimit-test.sh` (429 dopo pochi prompt lunghi) sono i due test "wow" da tenere pronti.
 
-> **Da verificare in prova generale** (non ho potuto eseguirlo): `llm-token-limit` con una risposta mock generata da `return-response` in inbound. La stima del prompt avviene prima, quindi il 429 dovrebbe scattare comunque; se non conta i token di completamento, alza il prompt nel test. `new Random()` nelle espressioni è nella lista dei tipi consentiti; se il publish della policy fallisce, sostituisci con `Guid.NewGuid().GetHashCode()`.
+> **Verificato in prova generale**: `llm-token-limit` non contava con il mock in `return-response` nella stessa inbound; ora `genai` inoltra a `genai-mock` (finto modello, stessa APIM) e il 429 scatta. Da dire in sala: "il gateway e il modello sono due cose diverse, anche nella demo".
 
 Prova generale completa: esegui i passi 1-5 sotto, poi `./demo/reset.sh <email>` per tornare allo stato iniziale.
 Tieni in una tab la run di `promote.yml` completata: è il piano B se Actions è lento in sala.
@@ -56,7 +56,7 @@ Cosa dire: due difetti reali della 1.0.5 che ho corretto a mano: il path filter 
 git add apim-artifacts && git commit -m "chore: baseline orders API from dev" && git push
 ```
 
-Mostra l'albero: tre API con `apiInformation.json`, `specification.yaml`, `policy.xml` a livello API e operazione; `policyFragments/std-headers/` (arrivato come dipendenza transitiva: nessuno l'ha messo nel filtro); `backends/`, `namedValues/` (il segreto è `*** REDACTED ***`), `products/sharp4dev/apis.json`. Apri `apis/catalog/operations/list-products/policy.xml`: è la slide del muro delle policy, in XML.
+Mostra l'albero: quattro API (orders, catalog, genai, genai-mock) con `apiInformation.json`, `specification.yaml`, `policy.xml` a livello API e operazione; `policyFragments/std-headers/` (arrivato come dipendenza transitiva: nessuno l'ha messo nel filtro); `backends/`, `namedValues/` (il segreto è `*** REDACTED ***`), `products/sharp4dev/apis.json`. Apri `apis/catalog/operations/list-products/policy.xml`: è la slide del muro delle policy, in XML.
 Il push su main fa partire `promote.yml`: dev (no-op o PUT idempotenti) → qa → **si ferma in attesa di approvazione su prod**. Lascialo lì: approvi al passo 4.
 
 > Primo deploy su qa/prod = tutte le risorse del commit (il commit di baseline le contiene tutte, quindi l'incrementale equivale a un full).
