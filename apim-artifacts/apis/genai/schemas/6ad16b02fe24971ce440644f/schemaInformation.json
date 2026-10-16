@@ -1,0 +1,43 @@
+{
+  "id": "/subscriptions/d7096863-2be3-4152-9170-aed58a1c60fa/resourceGroups/rg-apiops-s4d-qa/providers/Microsoft.ApiManagement/service/apim-s4d-qa/apis/genai/schemas/6ad16b02fe24971ce440644f",
+  "type": "Microsoft.ApiManagement/service/apis/schemas",
+  "name": "6ad16b02fe24971ce440644f",
+  "properties": {
+    "contentType": "application/vnd.oai.openapi.components+json",
+    "document": {
+      "components": {
+        "schemas": {
+          "ChatCompletionsPostRequest": {
+            "required": [
+              "messages"
+            ],
+            "type": "object",
+            "properties": {
+              "model": {
+                "type": "string"
+              },
+              "messages": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "role": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "max_tokens": {
+                "type": "integer"
+              }
+            },
+            "x-apim-inline": true
+          }
+        }
+      }
+    }
+  }
+}

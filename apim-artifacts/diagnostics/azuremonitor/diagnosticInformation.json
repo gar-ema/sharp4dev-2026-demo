@@ -1,11 +1,11 @@
 {
-  "id": "/subscriptions/d7096863-2be3-4152-9170-aed58a1c60fa/resourceGroups/rg-apiops-s4d-dev/providers/Microsoft.ApiManagement/service/apim-s4d-dev/diagnostics/azuremonitor",
+  "id": "/subscriptions/d7096863-2be3-4152-9170-aed58a1c60fa/resourceGroups/rg-apiops-s4d-qa/providers/Microsoft.ApiManagement/service/apim-s4d-qa/diagnostics/azuremonitor",
   "type": "Microsoft.ApiManagement/service/diagnostics",
   "name": "azuremonitor",
   "properties": {
     "alwaysLog": null,
     "logClientIp": true,
-    "loggerId": "/subscriptions/d7096863-2be3-4152-9170-aed58a1c60fa/resourceGroups/rg-apiops-s4d-dev/providers/Microsoft.ApiManagement/service/apim-s4d-dev/loggers/azuremonitor",
+    "loggerId": "/subscriptions/d7096863-2be3-4152-9170-aed58a1c60fa/resourceGroups/rg-apiops-s4d-qa/providers/Microsoft.ApiManagement/service/apim-s4d-qa/loggers/azuremonitor",
     "sampling": {
       "samplingType": "fixed",
       "percentage": 100

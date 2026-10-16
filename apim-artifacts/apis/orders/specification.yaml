@@ -4,7 +4,7 @@ info:
   description: API demo per il talk "APIOps in azione" (Sharp4Dev 2026)
   version: '1.0'
 servers:
-  - url: https://apim-s4d-dev.azure-api.net/orders
+  - url: https://apim-s4d-qa.azure-api.net/orders
 paths:
   /:
     get:
@@ -16,10 +16,6 @@ paths:
           description: OK
           content:
             application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Order'
               example:
                 - id: string
                   customer: string
@@ -41,8 +37,6 @@ paths:
           description: OK
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/Order'
               example:
                 id: string
                 customer: string
@@ -50,16 +44,6 @@ paths:
                 status: string
         '404':
           description: Non trovato
-components:
-  schemas:
-    Order:
-      type: object
-      properties:
-        id:
-          type: string
-        customer:
-          type: string
-        total:
-          type: number
-        status:
-          type: string
+components: { }
+x-ms-export-notes:
+  - 'Definitions/body parameters are not exported since this API references multiple schemas with OpenAPI components as opposed to one. Schemas referenced: 6ad167f93dccad232c3fdf12,6ad16b02fe24971ce440644a'

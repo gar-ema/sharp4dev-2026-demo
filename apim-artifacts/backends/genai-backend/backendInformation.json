@@ -1,11 +1,11 @@
 {
-  "id": "/subscriptions/d7096863-2be3-4152-9170-aed58a1c60fa/resourceGroups/rg-apiops-s4d-dev/providers/Microsoft.ApiManagement/service/apim-s4d-dev/backends/genai-backend",
+  "id": "/subscriptions/d7096863-2be3-4152-9170-aed58a1c60fa/resourceGroups/rg-apiops-s4d-qa/providers/Microsoft.ApiManagement/service/apim-s4d-qa/backends/genai-backend",
   "type": "Microsoft.ApiManagement/service/backends",
   "name": "genai-backend",
   "properties": {
     "title": "GenAI backend (Microsoft Foundry / Azure OpenAI)",
     "description": "In demo punta all API genai-mock sullo stesso gateway. In prod: https://<resource>.openai.azure.com/openai",
-    "url": "https://apim-s4d-dev.azure-api.net/genai-mock",
+    "url": "https://apim-s4d-qa.azure-api.net/genai-mock",
     "protocol": "http"
   }
 }

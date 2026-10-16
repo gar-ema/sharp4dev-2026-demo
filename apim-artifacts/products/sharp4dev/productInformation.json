@@ -1,5 +1,5 @@
 {
-  "id": "/subscriptions/d7096863-2be3-4152-9170-aed58a1c60fa/resourceGroups/rg-apiops-s4d-dev/providers/Microsoft.ApiManagement/service/apim-s4d-dev/products/sharp4dev",
+  "id": "/subscriptions/d7096863-2be3-4152-9170-aed58a1c60fa/resourceGroups/rg-apiops-s4d-qa/providers/Microsoft.ApiManagement/service/apim-s4d-qa/products/sharp4dev",
   "type": "Microsoft.ApiManagement/service/products",
   "name": "sharp4dev",
   "properties": {

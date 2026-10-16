@@ -1,5 +1,5 @@
 {
-  "id": "/subscriptions/d7096863-2be3-4152-9170-aed58a1c60fa/resourceGroups/rg-apiops-s4d-dev/providers/Microsoft.ApiManagement/service/apim-s4d-dev/apis/genai/operations/chat-completions",
+  "id": "/subscriptions/d7096863-2be3-4152-9170-aed58a1c60fa/resourceGroups/rg-apiops-s4d-qa/providers/Microsoft.ApiManagement/service/apim-s4d-qa/apis/genai/operations/chat-completions",
   "type": "Microsoft.ApiManagement/service/apis/operations",
   "name": "chat-completions",
   "properties": {
@@ -28,7 +28,7 @@
               }
             }
           },
-          "schemaId": "6ad167f9c3c8a81720f8c4f3",
+          "schemaId": "6ad16b02fe24971ce440644f",
           "typeName": "ChatCompletionsPostRequest",
           "generatedSample": "{\r\n  \"model\": \"string\",\r\n  \"messages\": [\r\n    {\r\n      \"role\": \"string\",\r\n      \"content\": \"string\"\r\n    }\r\n  ],\r\n  \"max_tokens\": 0\r\n}",
           "sample": "{\r\n  \"model\": \"string\",\r\n  \"messages\": [\r\n    {\r\n      \"role\": \"string\",\r\n      \"content\": \"string\"\r\n    }\r\n  ],\r\n  \"max_tokens\": 0\r\n}"

@@ -4,7 +4,7 @@ info:
   description: 'Catalogo prodotti fittizio con risposte casuali. Mostra fragment, cache, check-header, choose e CORS.'
   version: '1.0'
 servers:
-  - url: https://apim-s4d-dev.azure-api.net/catalog
+  - url: https://apim-s4d-qa.azure-api.net/catalog
 paths:
   /products:
     get:

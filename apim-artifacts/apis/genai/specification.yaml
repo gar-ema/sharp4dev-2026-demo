@@ -4,7 +4,7 @@ info:
   description: Facciata OpenAI-compatible. In demo risponde con un mock casuale; in produzione punta a un deployment Microsoft Foundry.
   version: '1.0'
 servers:
-  - url: https://apim-s4d-dev.azure-api.net/genai
+  - url: https://apim-s4d-qa.azure-api.net/genai
 paths:
   /chat/completions:
     post:
@@ -14,24 +14,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              required:
-                - messages
-              type: object
-              properties:
-                model:
-                  type: string
-                messages:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      role:
-                        type: string
-                      content:
-                        type: string
-                max_tokens:
-                  type: integer
             example:
               model: string
               messages:
@@ -44,3 +26,5 @@ paths:
         '429':
           description: Token limit superato
 components: { }
+x-ms-export-notes:
+  - 'Definitions/body parameters are not exported since this API references multiple schemas with OpenAPI components as opposed to one. Schemas referenced: 6ad167f9c3c8a81720f8c4f3,6ad16b02fe24971ce440644f'
