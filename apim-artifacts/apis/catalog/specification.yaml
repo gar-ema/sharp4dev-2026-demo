@@ -21,6 +21,19 @@ paths:
           description: OK
         '503':
           description: Chaos mode
+  /products/discounted:
+    get:
+      summary: Prodotti in sconto (sconto e prezzi casuali)
+      description: Prodotti in sconto (sconto e prezzi casuali). Filtro opzionale minDiscount (percentuale, default 10).
+      operationId: list-discounted-products
+      parameters:
+        - name: minDiscount
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
   '/products/{id}/price':
     get:
       summary: Prezzo di un prodotto (richiede header X-Client-Id)

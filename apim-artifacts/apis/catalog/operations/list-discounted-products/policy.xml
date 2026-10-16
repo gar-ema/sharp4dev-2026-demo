@@ -1,0 +1,43 @@
+<policies>
+	<inbound>
+		<base />
+		<return-response>
+			<set-status code="200" reason="OK" />
+			<set-header name="Content-Type" exists-action="override">
+				<value>application/json</value>
+			</set-header>
+			<set-header name="X-Environment" exists-action="override">
+				<value>{{env-name}}</value>
+			</set-header>
+			<set-body>@{
+                var min = 10;
+                int.TryParse(context.Request.Url.Query.GetValueOrDefault("minDiscount", "10"), out min);
+                if (min &lt; 5) { min = 5; }
+                if (min &gt; 70) { min = 70; }
+                var r = new Random();
+                var names = new[] { "Tastiera meccanica", "Monitor 27 pollici", "Webcam 4K", "Docking station", "Cuffie ANC" };
+                var items = new System.Text.StringBuilder("[");
+                var count = 0;
+                for (var i = 0; i &lt; names.Length; i++) {
+                    if (r.Next(0, 100) &lt; 40) { continue; }
+                    var cents = r.Next(2000, 50000);
+                    var discount = r.Next(min, 71);
+                    var finalCents = cents * (100 - discount) / 100;
+                    if (count &gt; 0) { items.Append(","); }
+                    items.Append("{\"id\":\"P" + (100 + i) + "\",\"name\":\"" + names[i] + "\",\"listPrice\":" + (cents / 100) + "." + (cents % 100).ToString("00") + ",\"discountPercent\":" + discount + ",\"price\":" + (finalCents / 100) + "." + (finalCents % 100).ToString("00") + ",\"currency\":\"EUR\"}");
+                    count++;
+                }
+                return items.Append("]").ToString();
+            }</set-body>
+		</return-response>
+	</inbound>
+	<backend>
+		<base />
+	</backend>
+	<outbound>
+		<base />
+	</outbound>
+	<on-error>
+		<base />
+	</on-error>
+</policies>
