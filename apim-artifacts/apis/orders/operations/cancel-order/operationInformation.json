@@ -1,0 +1,37 @@
+{
+  "name": "cancel-order",
+  "properties": {
+    "displayName": "Annulla ordine",
+    "method": "POST",
+    "urlTemplate": "/{id}/cancel",
+    "templateParameters": [
+      {
+        "name": "id",
+        "type": "string",
+        "required": true,
+        "values": []
+      }
+    ],
+    "description": "Annulla un ordine. Gli ordini già spediti (es. 1001) non sono annullabili: 409.",
+    "responses": [
+      {
+        "statusCode": 200,
+        "description": "Ordine annullato",
+        "representations": [],
+        "headers": []
+      },
+      {
+        "statusCode": 404,
+        "description": "Non trovato",
+        "representations": [],
+        "headers": []
+      },
+      {
+        "statusCode": 409,
+        "description": "Ordine già spedito, non annullabile",
+        "representations": [],
+        "headers": []
+      }
+    ]
+  }
+}

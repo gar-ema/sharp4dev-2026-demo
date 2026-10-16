@@ -50,6 +50,28 @@ paths:
                 status: string
         '404':
           description: Non trovato
+  '/{id}/cancel':
+    post:
+      summary: Annulla ordine
+      description: Annulla un ordine. Gli ordini già spediti non sono annullabili.
+      operationId: cancel-order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ordine annullato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          description: Non trovato
+        '409':
+          description: Ordine già spedito, non annullabile
 components:
   schemas:
     Order:

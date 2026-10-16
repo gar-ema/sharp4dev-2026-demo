@@ -1,0 +1,36 @@
+<policies>
+        <inbound>
+                <base />
+                <set-variable name="orderId" value="@(context.Request.MatchedParameters[&quot;id&quot;])" />
+                <choose>
+                        <when condition="@((string)context.Variables[&quot;orderId&quot;] == &quot;1001&quot;)">
+                                <return-response>
+                                        <set-status code="409" reason="Conflict" />
+                                        <set-header name="Content-Type" exists-action="override">
+                                                <value>application/json</value>
+                                        </set-header>
+                                        <set-body>@("{\"id\":\"" + (string)context.Variables["orderId"] + "\",\"error\":\"Ordine già spedito, non annullabile\"}")</set-body>
+                                </return-response>
+                        </when>
+                </choose>
+                <return-response>
+                        <set-status code="200" reason="OK" />
+                        <set-header name="Content-Type" exists-action="override">
+                                <value>application/json</value>
+                        </set-header>
+                        <set-header name="X-Environment" exists-action="override">
+                                <value>{{env-name}}</value>
+                        </set-header>
+                        <set-body>@("{\"id\":\"" + (string)context.Variables["orderId"] + "\",\"status\":\"cancelled\",\"cancelledAt\":\"" + DateTime.UtcNow.ToString("o") + "\",\"environment\":\"{{env-name}}\"}")</set-body>
+                </return-response>
+        </inbound>
+        <backend>
+                <base />
+        </backend>
+        <outbound>
+                <base />
+        </outbound>
+        <on-error>
+                <base />
+        </on-error>
+</policies>
