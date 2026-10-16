@@ -1,0 +1,30 @@
+{
+  "name": "list-discounted-products",
+  "properties": {
+    "displayName": "Prodotti in sconto (sconto e prezzi casuali)",
+    "method": "GET",
+    "urlTemplate": "/products/discounted",
+    "templateParameters": [],
+    "description": "Prodotti in sconto (sconto e prezzi casuali). Filtro opzionale minDiscount (percentuale, default 10).",
+    "request": {
+      "queryParameters": [
+        {
+          "name": "minDiscount",
+          "type": "integer",
+          "required": false,
+          "values": []
+        }
+      ],
+      "headers": [],
+      "representations": []
+    },
+    "responses": [
+      {
+        "statusCode": 200,
+        "description": "OK",
+        "representations": [],
+        "headers": []
+      }
+    ]
+  }
+}
