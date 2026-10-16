@@ -17,7 +17,7 @@ Mostra come gestire la configurazione di **Azure API Management** come codice co
 |---|---|
 | `infra/` | Bicep per le tre APIM Basic v2 (dev seminata con le API `orders`, `catalog`, `genai` e il fragment `std-headers`), script `deploy.sh`, `identity.sh` (OIDC + RBAC + secret GitHub), `teardown.sh` |
 | `apim-artifacts/` | Artefatti APIM (vuoto: li produce `apiops extract` durante la demo) |
-| `configuration.extractor.yaml` | Filtro: le tre API demo e il prodotto `sharp4dev` (+ dipendenze transitive: backend, named value, fragment) |
+| `configuration.extractor.yaml` | Filtro: le quattro API demo e il prodotto `sharp4dev` (+ dipendenze transitive: backend, named value, fragment) |
 | `configuration.{dev,qa,prod}.yaml` | Override per ambiente: URL backend, `serviceUrl`, named value `env-name`, segreto via token `{#[ORDERS_BACKEND_KEY]#}` |
 | `.github/workflows/pr-dry-run.yml` | Su ogni PR: `apiops publish --dry-run` su dev, commento con il piano, gate "0 DELETE" |
 | `.github/workflows/promote.yml` + `_publish-env.yml` | Promozione dev → qa → prod dello stesso commit, dry-run gate per ambiente, approvazione su prod |
@@ -26,13 +26,14 @@ Mostra come gestire la configurazione di **Azure API Management** come codice co
 | `demo/` | `RUNBOOK.md` passo-passo, script dei singoli passi, `smoke.sh`, `chaos-test.sh`, `genai-tokenlimit-test.sh`, `reset.sh` |
 | `samples/codefirst/` | Artefatti scritti a mano: piano B se l'extract live fallisce |
 
-## Le API della demo (tutte mock: nessun backend reale, risposte casuali generate dalle policy)
+## Le API della demo (tutte mock: nessun backend fuori da APIM, risposte casuali generate dalle policy)
 
 | API | Operazioni | Policy mostrate |
 |---|---|---|
 | `orders` | `GET /orders`, `GET /orders/{id}` | `rate-limit-by-key`, `set-backend-service`, `set-header` con named value `{{env-name}}`, `return-response` |
 | `catalog` | `GET /catalog/products[?chaos=true]`, `GET /catalog/products/{id}/price` | `include-fragment` (std-headers), `cors`, `cache-lookup-value`/`cache-store-value` (20 s), `check-header` (401), `set-variable` + `choose` + `Random` (503 casuali), `set-body` con espressioni C# |
-| `genai` | `POST /genai/chat/completions` (schema OpenAI) | `llm-token-limit` (300 TPM per IP, stima del prompt), mock di chat completion con `usage`; in commento la versione prod: `set-backend-service` + `authentication-managed-identity` verso Foundry, `llm-emit-token-metric`, `llm-content-safety` |
+| `genai` | `POST /genai/chat/completions` (schema OpenAI) | AI gateway: `llm-token-limit` (300 TPM per IP, stima del prompt) + `set-backend-service` verso `genai-mock`; in commento la versione prod verso Foundry con managed identity, `llm-emit-token-metric`, `llm-content-safety` |
+| `genai-mock` | `POST /genai-mock/chat/completions` | Il finto modello: risposta OpenAI-compatible con `usage` generata da policy. Serve a `llm-token-limit` per contare i token di completamento |
 
 ## Quick start
 

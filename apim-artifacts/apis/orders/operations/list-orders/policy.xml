@@ -1,7 +1,7 @@
 <policies>
 	<inbound>
 		<base />
-		<rate-limit-by-key calls="5" renewal-period="60" counter-key="@(context.Request.IpAddress)" />
+		<rate-limit-by-key calls="20" renewal-period="60" counter-key="@(context.Request.IpAddress)" />
 		<return-response>
 			<set-status code="200" reason="OK" />
 			<set-header name="Content-Type" exists-action="override">
